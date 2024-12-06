@@ -1,0 +1,1118 @@
+<!DOCTYPE html><html><head><base href="."><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Gerenciamento de Vendas</title>
+<style>
+:root {
+  --primary: #ffb74d;
+  --secondary: #FF3635;
+  --success: #2e7d32;
+  --danger: #c62828;
+  --light: #121212;
+  --text: #ffffff;
+  --shadow: 0 4px 6px rgba(0,0,0,0.3);
+  --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--light);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background: var(--gradient);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.product-form {
+  background: #1e1e1e;
+  padding: 3rem;
+  min-height: 100vh;
+  box-shadow: var(--shadow);
+  position: relative;
+  color: var(--text);
+}
+
+.product-form h2 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.product-form h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background: var(--gradient);
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  color: var(--primary);
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+input, select {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #262626;
+  color: var(--text);
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 167, 38, 0.1);
+  outline: none;
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #262626;
+  color: var(--text);
+  min-height: 100px;
+  resize: vertical;
+}
+
+button {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: var(--shadow);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.product-details {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #000000;
+}
+
+.change {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.payment-error {
+  color: var(--danger);
+  display: none;
+  margin-top: 1rem;
+  font-size: 1rem;
+  background: #ffebee;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--danger);
+}
+
+.products-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  background: var(--light);
+}
+
+.product-card {
+  background: #1e1e1e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  color: var(--text);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.product-card h3 {
+  color: var(--primary);
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+}
+
+.product-details p strong {
+  color: var(--primary);
+}
+
+.product-details p {
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+
+.success-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-out 2.5s forwards;
+  z-index: 1100;
+}
+
+.success-notification svg {
+  width: 24px;
+  height: 24px;
+}
+
+.product-card {
+  animation: slideIn 0.4s ease-out;
+}
+
+#changeDisplay {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #e8f5e9;
+  color: var(--success);
+  font-weight: 500;
+  text-align: center;
+  display: none;
+}
+
+#changeDisplay.active {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+.change-calculator {
+  background: #1a472a;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: var(--shadow);
+  border: 2px solid #2e7d32;
+}
+
+.change-calculator h3 {
+  color: var(--success);
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.change-amount {
+  font-size: 1.5rem;
+  text-align: center;
+  color: var(--success);
+  font-weight: bold;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 6px;
+}
+
+.calculate-change-btn {
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 1rem auto;
+  transition: all 0.3s ease;
+  width: 200px;
+}
+
+.calculate-change-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #2e7d32;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  margin: 2rem 0;
+}
+
+.summary-header h2 {
+  margin: 0;
+}
+
+.end-day-btn {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.end-day-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.summary-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e1e1e;
+  color: var(--text);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  max-width: 500px;
+  width: 90%;
+  display: none;
+  z-index: 1000;
+}
+
+.summary-box.active {
+  display: block;
+  animation: slideIn 0.3s ease-out;
+}
+
+.summary-box h3 {
+  color: var(--primary);
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #333;
+  color: var(--text);
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+  font-weight: bold;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 2rem;
+  background: var(--danger);
+  color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.3s ease-out;
+  z-index: 1100;
+}
+
+.close-summary {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text);
+  padding: 0.5rem;
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+.export-btn {
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.export-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.status-management {
+  background: #1e1e1e;
+  padding: 3rem;
+  box-shadow: var(--shadow);
+  margin-top: 2rem;
+  color: var(--text);
+}
+
+.status-management h2 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.status-management h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background: var(--gradient);
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.status-tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.status-tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  background: #262626;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.status-tab.active {
+  background: var(--gradient);
+  color: white;
+}
+
+.status-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.status-item {
+  background: #262626;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text);
+}
+
+.status-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.status-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.status-btn.next {
+  background: var(--success);
+  color: white;
+}
+
+.status-btn.prev {
+  background: var(--secondary);
+  color: white;
+}
+
+.status-btn.remove {
+  background: var(--danger);
+  color: white;
+}
+
+.whatsapp-sender {
+  background: #1e1e1e;
+  padding: 3rem;
+  box-shadow: var(--shadow);
+  margin-top: 2rem;
+  color: var(--text);
+}
+
+.whatsapp-sender h2 {
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+.whatsapp-sender h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background: var(--gradient);
+  margin: 1rem auto;
+  border-radius: 2px;
+}
+
+.whatsapp-btn {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: var(--shadow);
+}
+
+.whatsapp-btn:hover {
+  background: #128C7E;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <img class="logo" src="https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&amp;st=16y14rvk&amp;dl=1" alt="Sistema de Gerenciamento de Vendas logo - blue and white sales management icon" width="80" height="80">
+    <h1>Gerenciamento Pian Burguer</h1>
+  </div>
+  
+  <div class="product-form">
+    <h2>Adicionar Produto</h2>
+    <form id="productForm">
+      <div class="form-group">
+        <label for="productName">Nome do Produto</label>
+        <input type="text" id="productName" required="">
+      </div>
+
+      <div class="form-group">
+        <label for="productDescription">Descrição do Produto</label>
+        <textarea id="productDescription" rows="3" required=""></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="productPrice">Valor do Produto (R$)</label>
+        <input type="number" id="productPrice" step="0.01" required="">
+      </div>
+      
+      <div class="form-group">
+        <label for="paymentMethod">Forma de Pagamento</label>
+        <select id="paymentMethod" required="">
+          <option value="money">Dinheiro</option>
+          <option value="credit">Cartão de Crédito</option>
+          <option value="debit">Cartão de Débito</option>
+          <option value="pix">PIX</option>
+        </select>
+      </div>
+      
+      <div class="form-group" id="receivedAmountGroup">
+        <label for="receivedAmount">Valor Recebido (R$)</label>
+        <input type="number" id="receivedAmount" step="0.01">
+        <div class="payment-error" id="paymentError">O valor recebido é menor que o valor do produto!</div>
+      </div>
+
+      <div class="change-calculator" id="changeCalculator">
+        <h3>Calculadora de Troco</h3>
+        <div class="change-amount" id="changeAmount">Troco: R$ 0.00</div>
+<button type="button" class="calculate-change-btn" id="calculateChangeBtn">Confirme antes de registrar!</button>
+      </div>
+      
+      <button type="submit">Registrar Venda</button>
+    </form>
+  </div>
+
+  <div class="status-management">
+    <h2>Gerencie Seus Produtos</h2>
+    <div class="status-tabs">
+      <div class="status-tab active" data-status="preparo">Em Preparo</div>
+      <div class="status-tab" data-status="transito">Em Trânsito</div>
+      <div class="status-tab" data-status="entregue">Entregue</div>
+      <div class="status-tab" data-status="finalizado">Finalizado</div>
+    </div>
+    <div class="status-content" id="statusContent">
+  <script>
+    class StatusManager {
+      constructor() {
+        this.sales = JSON.parse(localStorage.getItem('sales')) || [];
+        this.statusContent = document.getElementById('statusContent');
+        this.setupEventListeners();
+        this.updateStatusDisplay();
+      }
+
+      setupEventListeners() {
+        this.statusContent.addEventListener('click', (e) => {
+          if (e.target.classList.contains('status-btn') && e.target.dataset.action === 'remove') {
+            const saleId = e.target.dataset.saleId;
+            this.removeSaleStatus(saleId);
+          }
+        });
+      }
+
+  removeSaleStatus(saleId) {
+    const saleIndex = this.sales.findIndex(sale => sale.timestamp.toString() === saleId);
+    if (saleIndex !== -1) {
+      this.sales[saleIndex].status = 'finalizado';
+      localStorage.setItem('sales', JSON.stringify(this.sales));
+      this.updateStatusDisplay();
+    }
+  }
+
+
+      updateStatusDisplay() {
+        const activeStatus = document.querySelector('.status-tab.active').dataset.status;
+        const filteredSales = this.sales.filter(sale => sale.status === activeStatus || 
+          (!sale.status && activeStatus === 'preparo'));
+        
+        this.statusContent.innerHTML = filteredSales.map(sale => `
+          <div class="status-item">
+            <div>
+              <strong>${sale.name}</strong> - R$ ${sale.price.toFixed(2)}
+              <br>
+              <small>${new Date(sale.timestamp).toLocaleString()}</small>
+            </div>
+            <div class="status-actions">
+              <button class="status-btn remove" data-sale-id="${sale.timestamp}" data-action="remove">Mover para Finalizado</button>
+            </div>
+          </div>
+        `).join('') || '<p>Nenhum produto neste status</p>';
+      }
+    }
+
+    const statusManager = new StatusManager();
+  </script>
+</div>
+  </div>
+
+  <div class="whatsapp-sender">
+    <h2>Enviar Comteudo via WhatsApp</h2>
+    <div class="form-group">
+      <label for="whatsappNumber">Número do WhatsApp</label>
+      <input type="tel" id="whatsappNumber" placeholder="coloque o telefone com 5517 antes do telefone" required="">
+    </div>
+    <div class="form-group">
+      <label for="linkToSend">Escreva para Enviar</label>
+      <input type="url" id="linkToSend" placeholder="escreva aqui" required="">
+    </div>
+    <button type="button" id="sendWhatsAppBtn" class="whatsapp-btn">Enviar WhatsApp</button>
+  </div>
+
+  <div class="summary-header">
+    <h2>Vendas Registradas</h2>
+    <button class="end-day-btn" id="endDayBtn">Finalizar Noite</button>
+  </div>
+  <div class="products-list" id="productsList" style="background-color: #1e1e1e;"></div>
+
+  <div class="overlay" id="summaryOverlay"></div>
+  <div class="summary-box" id="summaryBox">
+    <button class="close-summary" id="closeSummary">×</button>
+    <h3>Resumo das Vendas</h3>
+    <div class="summary-items" id="summaryItems"></div>
+    <button class="export-btn" id="exportBtn">Exportar para TXT</button>
+  </div>
+</div>
+
+<script>
+class SalesManager {
+  constructor() {
+    this.sales = JSON.parse(localStorage.getItem('sales')) || [];
+    this.form = document.getElementById('productForm');
+    this.productsList = document.getElementById('productsList');
+    this.setupWhatsAppSender();
+    this.paymentMethod = document.getElementById('paymentMethod');
+    this.receivedAmountGroup = document.getElementById('receivedAmountGroup');
+    this.receivedAmount = document.getElementById('receivedAmount');
+    this.paymentError = document.getElementById('paymentError');
+    this.changeAmount = document.getElementById('changeAmount');
+    this.changeCalculator = document.getElementById('changeCalculator');
+    this.productPrice = document.getElementById('productPrice');
+    this.calculateChangeBtn = document.getElementById('calculateChangeBtn');
+
+    this.setupStatusManagement();
+    this.setupEventListeners();
+    this.updateDisplay();
+    this.toggleChangeCalculator();
+    this.toggleReceivedAmount();
+  }
+  
+  setupEventListeners() {
+    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    this.paymentMethod.addEventListener('change', () => {
+      this.toggleReceivedAmount();
+      this.toggleChangeCalculator();
+    });
+    this.receivedAmount.addEventListener('input', () => this.calculateChangeOnInput());
+    this.productPrice.addEventListener('input', () => this.calculateChangeOnInput());
+    this.calculateChangeBtn.addEventListener('click', () => this.calculateChangeOnInput());
+
+    document.getElementById('endDayBtn').addEventListener('click', () => this.showSummary());
+    document.getElementById('closeSummary').addEventListener('click', () => this.closeSummary());
+    document.getElementById('summaryOverlay').addEventListener('click', () => this.closeSummary());
+    document.getElementById('exportBtn').addEventListener('click', () => this.exportSales());
+  }
+
+  exportSales() {
+    const summary = this.calculateSummary();
+    const today = new Date().toLocaleDateString('pt-BR');
+    
+    let content = `Resumo de Vendas - ${today}\n\n`;
+    content += `Vendas em Dinheiro: R$ ${summary.money.toFixed(2)}\n`;
+    content += `Vendas em Cartão: R$ ${(summary.credit + summary.debit).toFixed(2)}\n`;
+    content += `Vendas em PIX: R$ ${summary.pix.toFixed(2)}\n`;
+    content += `Total de Vendas: R$ ${summary.total.toFixed(2)}\n\n`;
+    content += `\nDetalhamento das Vendas:\n`;
+    
+    this.sales.forEach(sale => {
+      const saleDate = new Date(sale.timestamp).toLocaleString();
+      content += `\nProduto: ${sale.name}\n`;
+      content += `Descrição: ${sale.description}\n`;
+      content += `Valor: R$ ${sale.price.toFixed(2)}\n`;
+      content += `Forma de Pagamento: ${this.getPaymentMethodName(sale.paymentMethod)}\n`;
+      if (sale.paymentMethod === 'money') {
+        content += `Valor Recebido: R$ ${sale.received.toFixed(2)}\n`;
+        content += `Troco: R$ ${sale.change}\n`;
+      }
+      content += `Data/Hora: ${saleDate}\n`;
+      content += `----------------------------------------\n`;
+    });
+    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `vendas_${today.replace(/\//g, '-')}.txt`;
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    // Clear all sales data after exporting
+    this.sales = [];
+    localStorage.removeItem('sales');
+    this.updateDisplay();
+    this.updateStatusDisplay();
+    this.closeSummary();
+  }
+  
+  toggleReceivedAmount() {
+    const isMoneyPayment = this.paymentMethod.value === 'money';
+    this.receivedAmountGroup.style.display = isMoneyPayment ? 'block' : 'none';
+    
+    // Reset the received amount when payment method changes
+    if (!isMoneyPayment) {
+      this.receivedAmount.value = '';
+      this.paymentError.style.display = 'none';
+    }
+  }
+
+  toggleChangeCalculator() {
+    const isMoneyPayment = this.paymentMethod.value === 'money';
+    this.changeCalculator.style.display = isMoneyPayment ? 'block' : 'none';
+  }
+  
+  calculateChangeOnInput() {
+    if (this.paymentMethod.value === 'money') {
+      const price = parseFloat(this.productPrice.value) || 0;
+      const received = parseFloat(this.receivedAmount.value) || 0;
+      
+      if (received < price) {
+        this.paymentError.style.display = 'block';
+        this.changeAmount.textContent = 'Troco: R$ 0.00';
+      } else {
+        this.paymentError.style.display = 'none';
+        const change = this.calculateChange(price, received);
+        this.changeAmount.textContent = `Troco: R$ ${change}`;
+      }
+    }
+  }
+
+  calculateChange(price, received) {
+    return (received - price).toFixed(2);
+  }
+  
+  showSuccessNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'success-notification';
+    notification.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Venda Registrada com Sucesso!
+    `;
+    document.body.appendChild(notification);
+    
+    // Remove notification after animation
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('productName').value;
+    const description = document.getElementById('productDescription').value;
+    const price = parseFloat(this.productPrice.value);
+    const paymentMethod = this.paymentMethod.value;
+    const received = paymentMethod === 'money' ? parseFloat(this.receivedAmount.value) : price;
+    
+    if (paymentMethod === 'money' && received < price) {
+      this.paymentError.style.display = 'block';
+      return;
+    }
+    
+    this.paymentError.style.display = 'none';
+    
+    const sale = {
+      name,
+      description,
+      price,
+      paymentMethod,
+      received: paymentMethod === 'money' ? received : price,
+      change: paymentMethod === 'money' ? this.calculateChange(price, received) : '0.00',
+      timestamp: new Date(),
+      status: 'preparo'
+    };
+    
+    this.sales.push(sale);
+    localStorage.setItem('sales', JSON.stringify(this.sales));
+    this.updateDisplay();
+    this.form.reset();
+    this.changeAmount.textContent = 'Troco: R$ 0.00';
+    
+    // Show success notification
+    this.showSuccessNotification();
+  }
+  
+  showSummary() {
+    // Check if all sales are delivered
+    const undeliveredSales = this.sales.filter(sale => sale.status !== 'finalizado');
+    
+    if (undeliveredSales.length > 0) {
+      alert('Não é possível finalizar a noite. Existem pedidos pendentes que ainda não foram finalizados.');
+      return;
+    }
+
+    const summary = this.calculateSummary();
+    const summaryItems = document.getElementById('summaryItems');
+    
+    summaryItems.innerHTML = `
+    <div class="summary-item">
+      <span>Vendas em Dinheiro:</span>
+      <span>R$ ${summary.money.toFixed(2)}</span>
+    </div>
+    <div class="summary-item">
+      <span>Vendas em Cartão:</span>
+      <span>R$ ${(summary.credit + summary.debit).toFixed(2)}</span>
+    </div>
+    <div class="summary-item">
+      <span>Vendas em PIX:</span>
+      <span>R$ ${summary.pix.toFixed(2)}</span>
+    </div>
+    <div class="summary-item">
+      <span>Total de Vendas:</span>
+      <span>R$ ${summary.total.toFixed(2)}</span>
+    </div>
+  `;
+    
+    document.getElementById('summaryBox').classList.add('active');
+    document.getElementById('summaryOverlay').classList.add('active');
+  }
+
+  closeSummary() {
+    document.getElementById('summaryBox').classList.remove('active');
+    document.getElementById('summaryOverlay').classList.remove('active');
+  }
+
+  calculateSummary() {
+    const summary = {
+      money: 0,
+      credit: 0,
+      debit: 0,
+      pix: 0,
+      total: 0
+    };
+    
+    this.sales.forEach(sale => {
+      summary[sale.paymentMethod] += sale.price;
+      summary.total += sale.price;
+    });
+    
+    return summary;
+  }
+  
+  updateDisplay() {
+    this.productsList.innerHTML = this.sales.map(sale => {
+      const saleDate = new Date(sale.timestamp);
+      return `
+        <div class="product-card">
+          <h3>${sale.name}</h3>
+          <div class="product-details">
+            <p><strong>Descrição:</strong> ${sale.description}</p>
+            <p><strong>Valor:</strong> R$ ${sale.price.toFixed(2)}</p>
+            <p><strong>Forma de Pagamento:</strong> ${this.getPaymentMethodName(sale.paymentMethod)}</p>
+            ${sale.paymentMethod === 'money' ? `
+              <p><strong>Valor Recebido:</strong> R$ ${sale.received.toFixed(2)}</p>
+              <p><strong>Troco:</strong> <span class="change">R$ ${sale.change}</span></p>
+            ` : ''}
+            <p><strong>Status:</strong> ${this.getStatusName(sale.status)}</p>
+            <p><small>Venda realizada em: ${saleDate.toLocaleString()}</small></p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  getStatusName(status) {
+    const statusNames = {
+      'preparo': 'Em Preparo',
+      'transito': 'Em Trânsito',
+      'entregue': 'Entregue',
+      'finalizado': 'Finalizado'
+    };
+    return statusNames[status] || 'Em Preparo';
+  }
+  
+  getPaymentMethodName(method) {
+    const methods = {
+      money: 'Dinheiro',
+      credit: 'Cartão de Crédito',
+      debit: 'Cartão de Débito',
+      pix: 'PIX'
+    };
+    return methods[method];
+  }
+
+  setupStatusManagement() {
+    this.statusTabs = document.querySelectorAll('.status-tab');
+    this.statusContent = document.getElementById('statusContent');
+    
+    this.statusTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        this.setActiveTab(tab);
+        this.updateStatusDisplay();
+      });
+    });
+    
+    this.updateStatusDisplay();
+  }
+
+  setActiveTab(activeTab) {
+    this.statusTabs.forEach(tab => tab.classList.remove('active'));
+    activeTab.classList.add('active');
+  }
+
+  updateStatusDisplay() {
+    const activeStatus = document.querySelector('.status-tab.active').dataset.status;
+    const filteredSales = this.sales.filter(sale => sale.status === activeStatus || 
+      (!sale.status && activeStatus === 'preparo'));
+    
+    this.statusContent.innerHTML = filteredSales.map(sale => `
+      <div class="status-item">
+        <div>
+          <strong>${sale.name}</strong> - R$ ${sale.price.toFixed(2)}
+          <br>
+          <small>${new Date(sale.timestamp).toLocaleString()}</small>
+        </div>
+        <div class="status-actions">
+          ${this.getStatusButtons(sale)}
+        </div>
+      </div>
+    `).join('') || '<p>Nenhum produto neste status</p>';
+    
+    this.statusContent.querySelectorAll('.status-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const saleId = e.target.dataset.saleId;
+        const action = e.target.dataset.action;
+        this.updateSaleStatus(saleId, action);
+      });
+    });
+  }
+
+  getStatusButtons(sale) {
+    const status = sale.status || 'preparo';
+    const buttons = [];
+    
+    if (status !== 'preparo') {
+      buttons.push(`<button class="status-btn prev" data-sale-id="${sale.timestamp}" data-action="prev">← Voltar</button>`);
+    }
+    if (status !== 'entregue') {
+      buttons.push(`<button class="status-btn next" data-sale-id="${sale.timestamp}" data-action="next">Avançar →</button>`);
+    }
+    buttons.push(`<button class="status-btn remove" data-sale-id="${sale.timestamp}" data-action="remove">Mover para Finalizado</button>`);
+    
+    return buttons.join('');
+  }
+
+  setupWhatsAppSender() {
+    const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
+    sendWhatsAppBtn.addEventListener('click', () => {
+      const number = document.getElementById('whatsappNumber').value.trim();
+      const link = document.getElementById('linkToSend').value.trim();
+      
+      if (!number || !link) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+      
+      // Format WhatsApp URL
+      const whatsappUrl = `https://wa.me/${number}?text=${encodeURIComponent(link)}`;
+      window.open(whatsappUrl, '_blank');
+    });
+  }
+
+  updateSaleStatus(saleId, action) {
+    const statusFlow = ['preparo', 'transito', 'entregue', 'finalizado'];
+    const sale = this.sales.find(s => s.timestamp.toString() === saleId);
+    
+    if (sale) {
+    if (action === 'remove') {
+      sale.status = 'finalizado';
+
+      } else {
+        const currentStatus = sale.status || 'preparo';
+        const currentIndex = statusFlow.indexOf(currentStatus);
+        
+        if (action === 'next' && currentIndex < statusFlow.length - 1) {
+          sale.status = statusFlow[currentIndex + 1];
+        } else if (action === 'prev' && currentIndex > 0) {
+          sale.status = statusFlow[currentIndex - 1];
+        }
+      }
+      
+      localStorage.setItem('sales', JSON.stringify(this.sales));
+      this.updateStatusDisplay();
+      this.updateDisplay();
+    }
+  }
+}
+
+const salesManager = new SalesManager();
+</script>
+</body></html>
