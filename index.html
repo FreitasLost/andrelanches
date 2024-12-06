@@ -454,6 +454,32 @@
         color: white;
         margin-right: 5px;
     }
+
+    /* New styles for observations */
+    .observation-field {
+        margin: 15px 0;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+
+    .observation-field h3 {
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        color: white;
+    }
+
+    #orderObservation {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
+        resize: vertical;
+        min-height: 80px;
+    }
     </style>
     <script>
         // Função para bloquear o uso do Ctrl + U e outras teclas de desenvolvedor
@@ -519,6 +545,13 @@
                 <input type="text" id="userNeighborhood" placeholder="Bairro">
                 <input type="text" id="userNumber" placeholder="Número da Casa">
             </div>
+
+            <!-- New observation field -->
+            <div class="observation-field">
+                <h3>Observações do Pedido</h3>
+                <textarea id="orderObservation" placeholder="Alguma observação para seu pedido? Ex: Sem cebola, bem passado, etc." rows="3"></textarea>
+            </div>
+
             <div class="payment-type">
                 <h3 style="color: white;">Forma de Pagamento</h3>
                 <div class="payment-options">
@@ -540,7 +573,7 @@
                     </label>
                 </div>
                 <div id="pixField" style="display: none;">
-                    <p style="color: white;">Chave PIX: 17992095122</p>
+                    <p style="color: white;">Chave PIX: 17991179570</p>
                 </div>
                 <div id="changeField" style="display: none;">
                     <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
@@ -576,7 +609,9 @@
 
         <div class="menu-section" id="chicken-section">
             <h2>File de Frango</h2>
-            <div class="menu-grid" id="chicken"></div>
+            <div class="menu-grid" id="chicken">
+                <!-- Remove the hardcoded items here since they're now being generated from the JavaScript array -->
+            </div>
         </div>
 
         <div class="menu-section" id="meat-section">
@@ -647,8 +682,8 @@
         2: { open: '00:00', close: '21:00' }, // terça
         3: { open: '18:00', close: '21:00' }, // quarta
         4: { open: '18:00', close: '21:00' }, // quinta
-        5: { open: '18:00', close: '21:00' }, // sexta
-        6: { open: '18:00', close: '21:00' }  // sabado
+        5: { open: '13:00', close: '21:00' }, // sexta
+        6: { open: '13:00', close: '21:00' }  // sabado
     };
 
     function isStoreOpen() {
@@ -710,7 +745,6 @@
         }
     }
 
-    // Add this to the end of the displayMenuItems function
     setInterval(updateStoreStatus, 60000); // Check every minute
     updateStoreStatus(); // Initial check
 
@@ -737,14 +771,37 @@
         { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
         ],
         drinks: [
-            { name: "Roller 2L", price: 8.50, description: "2 litros" },
-            { name: "Coca-Cola 200ml", price: 3.00, description: "200ml" },
-            { name: "Frupic", price: 4.50, description: "Laranja e Frutas Vermelhas" }
+            { name: "Água com Gás", price: 3.50, description: "500ml" },
+            { name: "Água sem Gás", price: 3.00, description: "500ml" },
+            { name: "Sprite Lemon", price: 4.50, description: "Lata" },
+            { name: "Suco Del Vale Laranja", price: 4.50, description: "400ml" },
+            { name: "Suco Del Vale Uva", price: 4.50, description: "400ml" },
+            { name: "Suco Del Vale Laranja", price: 7.00, description: "1L" },
+            { name: "Suco Del Vale Uva", price: 7.00, description: "1L" },
+            { name: "Coca Cola", price: 5.00, description: "Lata" },
+            { name: "Coca Cola Zero", price: 5.00, description: "Lata" },
+            { name: "Fanta", price: 5.00, description: "Lata" },
+            { name: "Sprite", price: 5.00, description: "Lata" },
+            { name: "Kuat", price: 5.00, description: "Lata" },
+            { name: "Schweppes", price: 5.00, description: "Lata" },
+            { name: "Crystal", price: 4.00, description: "Lata" },
+            { name: "Skol", price: 5.00, description: "Lata" },
+            { name: "Antarctica Boa", price: 5.00, description: "Lata" }
         ],
         hotdogs: [
-            { name: "Hot Dog Simples", price: 12.00, description: "Salsicha, tomate, batata palha, milho e ervilha" },
-            { name: "Hot Dog Completo", price: 15.00, description: "Salsicha, tomate, batata palha, milho, ervilha, bacon e catupiry" },
-            { name: "Hot Dog Duplo", price: 18.00, description: "2 Salsichas, tomate, batata palha, milho, ervilha e catupiry" }
+            { name: "Dog Simples", price: 10.00, description: "Salsicha, batata, tomate, maionese, catchup" },
+            { name: "Dog Catupiry", price: 14.00, description: "Salsicha, batata, catupiry, tomate, maionese, catchup" },
+            { name: "Dog Milho", price: 13.00, description: "Salsicha, batata, milho, tomate, maionese, catchup" },
+            { name: "Dog Frango", price: 17.00, description: "Salsicha, batata, frango, tomate, maionese, catchup" },
+            { name: "Dog Calabresa", price: 17.00, description: "Salsicha, batata, calabresa, tomate, maionese, catchup" },
+            { name: "Dog Bacon", price: 17.00, description: "Salsicha, batata, bacon, tomate, maionese, catchup" },
+            { name: "Dog Hamburguer", price: 17.00, description: "Salsicha, batata, hamburguer, tomate, maionese, catchup" },
+            { name: "Dog do Davi", price: 22.00, description: "2 Salsichas, batata, frango, bacon, calabresa, cheddar, tomate, maionese, catchup" },
+            { name: "Dog Duplo", price: 13.00, description: "Duas salsichas, batata, tomate, maionese, catchup" },
+            { name: "Dog Duplo Catupiry", price: 17.00, description: "Duas salsichas, batata, catupiry, tomate, maionese, catchup" },
+            { name: "Dog Duplo Calabresa", price: 19.00, description: "Duas salsichas, batata, frango, tomate, maionese, catchup" },
+            { name: "Dog Duplo Bacon", price: 19.00, description: "Duas salsichas, batata, bacon, tomate, maionese, catchup" },
+            { name: "Dog Especial", price: 19.00, description: "Salsicha, batata, frango, bacon, calabresa, tomate, maionese, catchup" }
         ],
         juices: [
             { name: "Suco de Laranja", price: 8.00, description: "Natural, 500ml" },
@@ -765,28 +822,276 @@
             { name: "Alcatra", price: 45.00, description: "Grelhada com arroz e fritas" }
         ],
         specials: [
-            { name: "X-Especial", price: 25.00, description: "2 HAMBURGUER, MUSSARELA, PRESUNTO, 2 OVOS, BACON" },
-            { name: "X-Super", price: 28.00, description: "Hambúrguer duplo com queijos especiais" }
+            { 
+                name: "X-Tudão", 
+                price: 26.00, 
+                description: "2 Hambúrguer, Mussarela, Presunto, 2 Ovos, Bacon, Calabresa, Milho, Catupiry, Alface, Tomate, Maionese, Catchup"
+            },
+            { 
+                name: "X-Tudão Especial", 
+                price: 30.00, 
+                description: "2 Hambúrguer, Carne, Frango, Cebola, Mussarela, Presunto, 2 Ovos, Bacon, Calabresa, Milho, Catupiry, Alface, Tomate, Maionese, Catchup"
+            },
+            { 
+                name: "Dog da Casa", 
+                price: 20.00, 
+                description: "Salsicha, Frango, Bacon, Calabresa, Hambúrguer, Milho, Catupiry, Batata, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Pulman", 
+                price: 25.00, 
+                description: "Azeitona, Ovo, Bacon, Cebola, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "X-Belo", 
+                price: 24.00, 
+                description: "Filé de Frango, Mussarela, Milho, Azeitona, Ovo, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Taiger", 
+                price: 24.00, 
+                description: "Pernil, Mussarela, Bacon, Presunto, Azeitona, Milho, Ovo, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Hot Panter", 
+                price: 24.00, 
+                description: "Filé de Frango, Mussarela, Presunto, Ovo, Catupiry, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Churrasco Tudo", 
+                price: 24.00, 
+                description: "Carne, Mussarela, Cebola, Bacon, Presunto, Ovo, Alface, Tomate, Maionese, Catchup" 
+            },
+            { 
+                name: "Lanche Artesanal", 
+                price: 28.00, 
+                description: "Hambúrguer 180gr, Alface, Cebola Roxa, Molho Especial, Bacon, Barbecue, Cebola Empanada, (Catupiry, Cream Cheese ou Cheddar), Mussarela ou Queijo" 
+            }
         ],
         diverse: [
-            { name: "X-Tudo", price: 30.00, description: "Hambúrguer com todos os ingredientes disponíveis" },
-            { name: "X-Mix", price: 26.00, description: "Combinação especial de ingredientes" }
+            { 
+                name: "X-Burger", 
+                price: 14.00, 
+                description: "Hambúrguer, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Salada", 
+                price: 14.00, 
+                description: "Hambúrguer, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Milho", 
+                price: 16.00, 
+                description: "Hambúrguer, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Egg", 
+                price: 15.00, 
+                description: "Hambúrguer, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Azeitona", 
+                price: 17.00, 
+                description: "Hambúrguer, mussarela, azeitona, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Bacon", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Calabresa", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, calabresa, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Catupiry", 
+                price: 18.00, 
+                description: "Hambúrguer, mussarela, catupiry, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Vegetal", 
+                price: 18.00, 
+                description: "Mussarela, azeitona, ovo, cebola, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Tudo", 
+                price: 20.00, 
+                description: "Hambúrguer, mussarela, presunto, ovo, bacon, milho, alface, tomate, maionese, catchup" 
+            }
         ],
         ham: [
-            { name: "X-Pernil", price: 24.00, description: "Pernil desfiado com queijo e molho especial" },
-            { name: "Pernil Completo", price: 26.00, description: "Pernil com todos os complementos" }
+            { 
+                name: "Pernil", 
+                price: 19.00, 
+                description: "Pernil, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Salada", 
+                price: 21.00, 
+                description: "Pernil, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Bacon", 
+                price: 22.00, 
+                description: "Pernil, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Egg", 
+                price: 21.00, 
+                description: "Pernil, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Milho", 
+                price: 21.00, 
+                description: "Pernil, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Salada Bacon", 
+                price: 23.00, 
+                description: "Pernil, mussarela, alface, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Pernil Tudo", 
+                price: 23.00, 
+                description: "Pernil, mussarela, ovo, bacon, presunto, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Hot Taiger", 
+                price: 24.00, 
+                description: "Pernil, mussarela, bacon, presunto, azeitona, milho, ovo, alface, tomate, maionese, catchup" 
+            }
         ],
         chicken: [
-            { name: "X-Frango", price: 22.00, description: "Filé de frango grelhado com queijo" },
-            { name: "Frango Especial", price: 24.00, description: "Filé de frango com catupiry e bacon" }
+            { 
+                name: "X-Frango", 
+                price: 19.00, 
+                description: "Filé de frango, mussarela, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Salada", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Bacon", 
+                price: 22.00, 
+                description: "Filé de frango, mussarela, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Egg", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, ovo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Salada Bacon", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, alface, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Milho", 
+                price: 21.00, 
+                description: "Filé de frango, mussarela, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Catupiry", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, calabresa, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Calabresa", 
+                price: 22.00, 
+                description: "Filé de frango, mussarela, ovo, bacon, presunto, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "X-Frango Tudo", 
+                price: 23.00, 
+                description: "Filé de frango, mussarela, milho, ovo, alface, tomate, maionese, catchup" 
+            }
         ],
         meat: [
-            { name: "X-Carne", price: 23.00, description: "Carne bovina grelhada com queijo" },
-            { name: "Carne Especial", price: 25.00, description: "Carne bovina com complementos especiais" }
+            { 
+                name: "Bauru", 
+                price: 20.00, 
+                description: "Carne, mussarela, cebola, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Salada", 
+                price: 23.00, 
+                description: "Carne, mussarela, cebola, alface, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Egg", 
+                price: 22.00, 
+                description: "Carne, mussarela, cebola, ovo, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Calabresa", 
+                price: 23.00, 
+                description: "Carne, cebola, mussarela, calabresa, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Milho", 
+                price: 22.00, 
+                description: "Carne, cebola, mussarela, milho, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Bacon", 
+                price: 23.00, 
+                description: "Carne, cebola, mussarela, bacon, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Catupiry", 
+                price: 24.00, 
+                description: "Carne, cebola, mussarela, catupiry, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Tudo", 
+                price: 24.00, 
+                description: "Carne, mussarela, cebola, bacon, presunto, ovo, alface, tomate, maionese, catchup"
+            },
+            { 
+                name: "Bauru Krocodilo", 
+                price: 24.00, 
+                description: "Carne, mussarela, cebola, bacon, azeitona, tomate, maionese, catchup"
+            }
         ],
         hamcheese: [
-            { name: "Misto Quente", price: 18.00, description: "Presunto e queijo derretido" },
-            { name: "Misto Especial", price: 20.00, description: "Presunto e queijo com complementos" }
+            { 
+                name: "Misto Quente", 
+                price: 16.00, 
+                description: "Presunto, queijo, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Salada", 
+                price: 18.00, 
+                description: "Presunto, queijo, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Milho", 
+                price: 18.00, 
+                description: "Presunto, queijo, milho, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Bacon", 
+                price: 19.00, 
+                description: "Presunto, queijo, bacon, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Misto Quente Catupiry", 
+                price: 20.00, 
+                description: "Presunto, queijo, catupiry, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Americano", 
+                price: 17.00, 
+                description: "Presunto, queijo, ovo, alface, tomate, maionese, catchup" 
+            },
+            { 
+                name: "Americano Especial", 
+                price: 17.00, 
+                description: "Presunto, queijo, ovo, alface, hamburguer, tomate, maionese, catchup" 
+            }
         ]
     };
     
@@ -851,7 +1156,7 @@
         const cartItems = document.getElementById('cart-items');
         const cartTotal = document.getElementById('cart-total');
         let total = 0;
-    
+
         cartItems.innerHTML = '';
         cart.forEach((item, index) => {
             let itemTotal = item.price;
@@ -878,7 +1183,7 @@
                 </div>
             `;
         });
-    
+
         const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
         if (deliveryType === 'delivery') {
             deliveryFee = 5.00;
@@ -892,7 +1197,7 @@
         } else {
             deliveryFee = 0;
         }
-    
+
         cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
         
         // Trigger change recalculation
@@ -965,7 +1270,8 @@
         const neighborhood = document.getElementById('userNeighborhood').value;
         const number = document.getElementById('userNumber').value;
         const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
-    
+        const observation = document.getElementById('orderObservation').value.trim(); // Get observation
+        
         if (!name || !phone) {
             alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
             return;
@@ -1029,6 +1335,11 @@
                 message += `*Troco a devolver:* R$ ${change.toFixed(2)}\n`;
             }
         }
+
+        // Include observation in the message
+        if (observation) {
+            message += `\n📝 *Observações:*\n${observation}\n`;
+        }
         
         message += `------------------------\n`;
         message += `*Tipo:* ${
@@ -1044,7 +1355,7 @@
         message += `📲 *Telefone:* ${phone}`;
         
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+        window.open(`https://wa.me/5517991179570?text=${encodedMessage}`);
     }
     
     function scrollToSection(sectionId) {
